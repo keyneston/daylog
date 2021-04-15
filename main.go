@@ -13,7 +13,7 @@ func main() {
 	subcommands.Register(subcommands.HelpCommand(), "")
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
-	subcommands.Register(&addcmd.AddCMD{}, "")
+	subcommands.Register(&addcmd.AddCommand{}, "")
 
 	flag.Parse()
 	ctx := context.Background()
