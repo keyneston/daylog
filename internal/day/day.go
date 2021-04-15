@@ -52,6 +52,24 @@ func (d *Day) Write(w io.Writer) error {
 	return nil
 }
 
+// ReadFile returns true if the file was found and read, otherwise it returns
+// false.
+func (d *Day) ReadFile(base string) (bool, error) {
+	fName := d.FileName(base)
+
+	f, err := os.Open(fName)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return false, nil
+		}
+
+		return false, err
+	}
+	defer f.Close()
+
+	return true, d.Parse(f)
+}
+
 func (d *Day) WriteFile(base string) error {
 	fName := d.FileName(base)
 	if err := os.MkdirAll(filepath.Dir(fName), DefaultDirPerm); err != nil {

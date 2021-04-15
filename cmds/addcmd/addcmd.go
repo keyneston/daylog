@@ -36,6 +36,12 @@ func (c *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 	}
 
 	d := day.NewDay(time.Now())
+
+	if _, err := d.ReadFile(c.baseDir); err != nil {
+		log.Printf("Error: %v", err)
+		return subcommands.ExitFailure
+	}
+
 	d.Completed.Add(c.message)
 	if err := d.WriteFile(c.baseDir); err != nil {
 		log.Printf("Error: %v", err)
