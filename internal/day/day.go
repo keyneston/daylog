@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"time"
 )
@@ -16,11 +17,20 @@ var (
 	commentLine = regexp.MustCompile(`^\W*#.*$`)
 )
 
+const (
+	HeaderCompleted = "# What I worked on today"
+	HeaderNext      = "# What I’m working on next"
+	HeaderBlockers  = "# What’s blocking me"
+
+	DefaultDirPerm  = 0755
+	DefaultFilePerm = 0644
+)
+
 type Day struct {
 	Date time.Time
 
 	Completed *Entries
-	TODO      *Entries
+	Next      *Entries
 	Blockers  *Entries
 }
 
@@ -29,17 +39,26 @@ func NewDay(date time.Time) *Day {
 		Date: date,
 
 		Completed: &Entries{},
-		TODO:      &Entries{},
+		Next:      &Entries{},
 		Blockers:  &Entries{},
 	}
 }
 
 func (d *Day) Write(w io.Writer) error {
+	d.Completed.Write(w, HeaderCompleted)
+	d.Next.Write(w, HeaderNext)
+	d.Blockers.Write(w, HeaderBlockers)
+
 	return nil
 }
 
 func (d *Day) WriteFile(base string) error {
-	f, err := os.OpenFile(d.FileName(base), os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0644)
+	fName := d.FileName(base)
+	if err := os.MkdirAll(filepath.Dir(fName), DefaultDirPerm); err != nil {
+		return err
+	}
+
+	f, err := os.OpenFile(fName, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, DefaultFilePerm)
 	if err != nil {
 		return err
 	}
