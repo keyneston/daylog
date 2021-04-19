@@ -21,7 +21,7 @@ func (e *Entries) String() string {
 	return fmt.Sprintf("Entry[%d]", e.Len())
 }
 
-func (e *Entries) Write(w io.Writer, header string) error {
+func (e *Entries) Write(w io.Writer, prefix, header string) error {
 	if e.Len() == 0 {
 		return nil
 	}
@@ -31,7 +31,7 @@ func (e *Entries) Write(w io.Writer, header string) error {
 	}
 
 	for _, e := range e.Entries {
-		if _, err := fmt.Fprintln(w, e); err != nil {
+		if _, err := fmt.Fprintf(w, "%s%s\n", prefix, e); err != nil {
 			return err
 		}
 	}

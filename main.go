@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/subcommands"
 	"github.com/keyneston/daylog/cmds/addcmd"
+	"github.com/keyneston/daylog/cmds/compilecmd"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
 	subcommands.Register(&addcmd.AddCommand{}, "")
+	subcommands.Register(&compilecmd.CompileCommand{}, "")
 
 	flag.Parse()
 	ctx := context.Background()

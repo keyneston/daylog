@@ -11,6 +11,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"time"
+
+	"github.com/fatih/color"
 )
 
 var (
@@ -21,6 +23,13 @@ const (
 	HeaderCompleted = "# What I worked on today"
 	HeaderNext      = "# What I’m working on next"
 	HeaderBlockers  = "# What’s blocking me"
+
+	HeaderCompiledCompleted = ":: What I worked on today"
+	HeaderCompiledNext      = ":: What I’m working on next"
+	HeaderCompiledBlockers  = ":: What’s blocking me"
+
+	PrefixDiskEntry     = " - "
+	PrefixCompiledEntry = " • "
 
 	DefaultDirPerm  = 0755
 	DefaultFilePerm = 0644
@@ -45,9 +54,9 @@ func NewDay(date time.Time) *Day {
 }
 
 func (d *Day) Write(w io.Writer) error {
-	d.Completed.Write(w, HeaderCompleted)
-	d.Next.Write(w, HeaderNext)
-	d.Blockers.Write(w, HeaderBlockers)
+	d.Completed.Write(w, PrefixDiskEntry, HeaderCompleted)
+	d.Next.Write(w, PrefixDiskEntry, HeaderNext)
+	d.Blockers.Write(w, PrefixDiskEntry, HeaderBlockers)
 
 	return nil
 }
@@ -114,6 +123,7 @@ func (d *Day) Parse(input io.Reader) error {
 
 func (d *Day) parseLine(line []byte) error {
 	line = bytes.TrimSpace(line)
+	line = bytes.TrimLeft(line, PrefixDiskEntry)
 
 	if len(line) == 0 {
 		return nil
@@ -124,5 +134,15 @@ func (d *Day) parseLine(line []byte) error {
 	}
 
 	d.Completed.Add(string(line))
+	return nil
+}
+
+func (d *Day) Compile(w io.Writer, baseDir string) error {
+	bold := color.New(color.Bold).SprintFunc()
+
+	d.Completed.Write(w, PrefixCompiledEntry, bold(HeaderCompiledCompleted))
+	//d.Next.Write(w, PrefixCompiledEntry, HeaderCompiledNext)
+	//d.Blockers.Write(w, PrefixCompiledEntry, HeaderCompiledBlockers)
+
 	return nil
 }
