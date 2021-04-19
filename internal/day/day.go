@@ -35,12 +35,23 @@ const (
 	DefaultFilePerm = 0644
 )
 
+type state string
+
+const (
+	stateUnknown   state = "unknown"
+	stateCompleted state = "completed"
+	stateBlockers  state = "blockers"
+	stateNext      state = "next"
+)
+
 type Day struct {
 	Date time.Time
 
 	Completed *Entries
 	Next      *Entries
 	Blockers  *Entries
+
+	state state
 }
 
 func NewDay(date time.Time) *Day {
@@ -50,6 +61,8 @@ func NewDay(date time.Time) *Day {
 		Completed: &Entries{},
 		Next:      &Entries{},
 		Blockers:  &Entries{},
+
+		state: stateUnknown,
 	}
 }
 
@@ -115,7 +128,8 @@ func (d *Day) Parse(input io.Reader) error {
 			return err
 		}
 
-		if err := d.parseLine(line); err != nil {
+		err := d.parseLine(line)
+		if err != nil {
 			return err
 		}
 	}
@@ -130,10 +144,26 @@ func (d *Day) parseLine(line []byte) error {
 	}
 
 	if commentLine.Match(line) {
+		switch string(line) {
+		case HeaderCompleted:
+			d.state = stateCompleted
+		case HeaderNext:
+			d.state = stateNext
+		case HeaderCompiledBlockers:
+			d.state = stateBlockers
+		}
 		return nil
 	}
 
-	d.Completed.Add(string(line))
+	switch d.state {
+	case stateCompleted:
+		d.Completed.Add(string(line))
+	case stateBlockers:
+		d.Blockers.Add(string(line))
+	case stateNext:
+		d.Next.Add(string(line))
+	}
+
 	return nil
 }
 
@@ -141,8 +171,8 @@ func (d *Day) Compile(w io.Writer, baseDir string) error {
 	bold := color.New(color.Bold).SprintFunc()
 
 	d.Completed.Write(w, PrefixCompiledEntry, bold(HeaderCompiledCompleted))
-	//d.Next.Write(w, PrefixCompiledEntry, HeaderCompiledNext)
-	//d.Blockers.Write(w, PrefixCompiledEntry, HeaderCompiledBlockers)
+	d.Next.Write(w, PrefixCompiledEntry, bold(HeaderCompiledNext))
+	d.Blockers.Write(w, PrefixCompiledEntry, bold(HeaderCompiledBlockers))
 
 	return nil
 }

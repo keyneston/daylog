@@ -14,7 +14,9 @@ func main() {
 	subcommands.Register(subcommands.HelpCommand(), "")
 	subcommands.Register(subcommands.FlagsCommand(), "")
 	subcommands.Register(subcommands.CommandsCommand(), "")
-	subcommands.Register(&addcmd.AddCommand{}, "")
+	subcommands.Register(&addcmd.AddCommand{AddType: addcmd.AddCompleted}, "")
+	subcommands.Register(&addcmd.AddCommand{AddType: addcmd.AddNext}, "")
+	subcommands.Register(&addcmd.AddCommand{AddType: addcmd.AddBlocked}, "")
 	subcommands.Register(&compilecmd.CompileCommand{}, "")
 
 	flag.Parse()
