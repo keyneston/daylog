@@ -24,9 +24,9 @@ const (
 	HeaderNext      = "# What I’m working on next"
 	HeaderBlockers  = "# What’s blocking me"
 
-	HeaderCompiledCompleted = ":: What I worked on today"
-	HeaderCompiledNext      = ":: What I’m working on next"
-	HeaderCompiledBlockers  = ":: What’s blocking me"
+	HeaderCompiledCompleted = "*:: What I worked on today*"
+	HeaderCompiledNext      = "*:: What I’m working on next*"
+	HeaderCompiledBlockers  = "*:: What’s blocking me*"
 
 	PrefixDiskEntry     = " - "
 	PrefixCompiledEntry = " • "
