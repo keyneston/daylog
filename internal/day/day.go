@@ -149,7 +149,7 @@ func (d *Day) parseLine(line []byte) error {
 			d.state = stateCompleted
 		case HeaderNext:
 			d.state = stateNext
-		case HeaderCompiledBlockers:
+		case HeaderBlockers:
 			d.state = stateBlockers
 		}
 		return nil

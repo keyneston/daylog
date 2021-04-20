@@ -60,13 +60,10 @@ func (c *AddCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{
 
 	switch c.AddType {
 	case AddCompleted:
-		log.Printf("Adding to completed/%s", c.AddType)
 		d.Completed.Add(c.message)
 	case AddNext:
-		log.Printf("Adding to next/%s", c.AddType)
 		d.Next.Add(c.message)
 	case AddBlocked:
-		log.Printf("Adding to blocked/%s", c.AddType)
 		d.Blockers.Add(c.message)
 	}
 	if err := d.WriteFile(c.baseDir); err != nil {
