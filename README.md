@@ -14,6 +14,9 @@ daylog next "Vacation for the" "next week"
 # Open it in $EDITOR:
 daylog edit
 
+# Show what is on disk:
+daylog show
+
 # output a completed version of the day
 daylog compile
 ```
