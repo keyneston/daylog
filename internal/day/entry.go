@@ -22,12 +22,12 @@ func (e *Entries) String() string {
 }
 
 func (e *Entries) Write(w io.Writer, prefix, header string) error {
-	if e.Len() == 0 {
-		return nil
-	}
-
 	if _, err := fmt.Fprintln(w, header); err != nil {
 		return err
+	}
+
+	if e.Len() == 0 {
+		return nil
 	}
 
 	for _, e := range e.Entries {
