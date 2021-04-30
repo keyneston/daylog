@@ -20,3 +20,18 @@ daylog show
 # output a completed version of the day
 daylog compile
 ```
+
+# Installation
+
+```shell
+brew tap keyneston/tap
+brew install daylog
+```
+
+With go installed:
+
+```shell
+go install github.com/keyneston/daylog@latest
+```
+
+Or download the [latest release](https://github.com/keyneston/daylog/releases/) and add to your path.
