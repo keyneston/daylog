@@ -8,7 +8,7 @@ and then submitting your standups.
 ```
 # Add a task:
 daylog add "Finished ticket #1573"
-daylog blocked Got stuck working on ticket #1983
+daylog blocked Got stuck working on ticket \#1983
 daylog next "Vacation for the" "next week"
 
 # Open it in $EDITOR:
